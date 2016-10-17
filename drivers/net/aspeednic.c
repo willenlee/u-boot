@@ -17,6 +17,7 @@
 #include <net.h>
 #include <pci.h>
 #include <linux/mii.h>
+#define CONFIG_MAC2_ENABLE 1
 
 
 /*
