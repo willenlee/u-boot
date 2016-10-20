@@ -20,6 +20,7 @@ int board_init (void)
 	unsigned char data;
 	unsigned long gpio;
 	unsigned long reg;
+	unsigned long duty = 0xffffffff;
 
     /* AHB Controller */
     *((volatile ulong*) 0x1E600000)  = 0xAEED1A03;	/* unlock AHB controller */
@@ -37,6 +38,7 @@ int board_init (void)
 	reg = *((volatile ulong*) 0x1e6e2008);
 	reg &= 0x1c0fffff;
 	reg |= 0x61800000;				/* PCLK  = HPLL/8 */
+
 #ifdef CONFIG_AST1070
 	//check lpc or lpc+ mode
 ////////////////////////////////////////////////////////////////////////
@@ -98,6 +100,39 @@ enable this bit 0x1e6e2040 D[0]*/
 
     /* adress of boot parameters */
     gd->bd->bi_boot_params = 0x40000100;
+
+    /* Set PWM dytu to 100% */
+        reg = *((volatile ulong*) 0x1e6e2088);
+        reg |= 0x3e;  // enable PWM1~6 function pin
+        *((volatile ulong*) 0x1e6e2088) = reg;
+
+       // reset PWM
+       reg = *((volatile ulong*) 0x1e6e2004);
+       reg &= ~(0x200); /* stop the reset */
+       *((volatile ulong*) 0x1e6e2004) = reg;
+      // enable clock and and set all tacho/pwm to type M
+       *((volatile ulong*) 0x1e786000) = 1;
+       *((volatile ulong*) 0x1e786040) = 1;
+      /* set clock division and period of type M/N */
+      /* 0xFF11 --> 24000000 / (2 * 2 * 256) = 23437.5 Hz */
+      *((volatile ulong*) 0x1e786004) = 0xFF11FF11;
+      *((volatile ulong*) 0x1e786044) = 0xFF11FF11;
+      //PWM0-1
+      *((volatile ulong*) 0x1e786008) = duty;
+      //PWM2-3
+      *((volatile ulong*) 0x1e78600c) = duty;
+      //PWM4-5
+      *((volatile ulong*) 0x1e786048) = duty;
+      //PWM6-7
+      *((volatile ulong*) 0x1e78604C) = duty;
+
+      *((volatile ulong*) 0x1e786010) = 0x10000001;
+      *((volatile ulong*) 0x1e786018) = 0x10000001;
+      *((volatile ulong*) 0x1e786014) = 0x10000000;
+      *((volatile ulong*) 0x1e78601c) = 0x10000000;
+      *((volatile ulong*) 0x1e786020) = 0;
+      *((volatile ulong*) 0x1e786000) = 0xf01;
+      *((volatile ulong*) 0x1e786040) = 0xf01;
 
     return 0;
 }
