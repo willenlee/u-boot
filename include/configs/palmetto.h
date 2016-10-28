@@ -92,7 +92,7 @@
 #define CONFIG_CMDLINE_TAG	 1		/* enable passing of ATAGs	*/
 #define CONFIG_SETUP_MEMORY_TAGS 1
 #define CONFIG_INITRD_TAG	 1
-#define	CONFIG_BOOTARGS 	"console=ttyS4,9600n8 root=/dev/ram rw"
+#define	CONFIG_BOOTARGS 	"console=ttyS4,38400n8 root=/dev/ram rw"
 #define CONFIG_UPDATE           "tftp 40800000 ast2400.scr; so 40800000'"
 
 #define CONFIG_BOOTDELAY	3		/* autoboot after 3 seconds	*/
@@ -256,7 +256,7 @@
 #define CONFIG_SYS_NS16550_COM3		0x1e78e000
 #define	CONFIG_SYS_LOADS_BAUD_CHANGE
 #define CONFIG_CONS_INDEX		2
-#define CONFIG_BAUDRATE			9600
+#define CONFIG_BAUDRATE			38400
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
 #define CONFIG_ASPEED_COM 0x1e784000 // UART5
 #define CONFIG_ASPEED_COM_IER (CONFIG_ASPEED_COM + 0x4)
