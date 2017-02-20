@@ -262,6 +262,9 @@ dtb-$(CONFIG_SOC_KEYSTONE) += k2hk-evm.dtb \
 	k2e-evm.dtb \
 	k2g-evm.dtb
 
+dtb-$(CONFIG_TARGET_AST_G5) += aspeed-g5-evb.dtb \
+  aspeed-zaius.dtb
+
 targets += $(dtb-y)
 
 # Add any required device tree compiler flags here

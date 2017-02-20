@@ -13,4 +13,7 @@ config ASPEED_NET_PHY
 config ASPEED_NET_NCSI
 	bool  "Use a network controller attached via NSCI"
 
+config ASPEED_ZAIUS
+  bool  "Use Zaius config"
+
 endchoice

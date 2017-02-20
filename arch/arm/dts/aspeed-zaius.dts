@@ -1,0 +1,22 @@
+/dts-v1/;
+
+#include "aspeed-g5.dtsi"
+
+/ {
+	memory {
+		device_type = "memory";
+		reg = <0x80000000 0x20000000>;
+	};
+
+	aliases {
+		/* i2c buses are 0-based in DT and 1 based in schematic.
+		 * Also u-boot i2c driver gets upset if you try to select bus 0.
+		 */
+		i2c1 = &i2c0;
+	};
+};
+
+&i2c0 {
+	status = "okay";
+	clock-frequency = <400000>;
+};

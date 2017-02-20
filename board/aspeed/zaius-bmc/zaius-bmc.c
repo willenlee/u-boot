@@ -1,5 +1,4 @@
 /*
-<<<<<<< HEAD
  * (C) Copyright 2002
  * Sysgo Real-Time Solutions, GmbH <www.elinos.com>
  * Marius Groeger <mgroeger@sysgo.de>
@@ -32,29 +31,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
-=======
- * Copyright 2016 IBM Corporation
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
->>>>>>> f9b2a49f57c153c7358f9769234c0cefdf4de8d4
  */
 
 #include <common.h>
+#include <i2c.h>
 #include <netdev.h>
+#include <net.h>
 
 #include <asm/arch/ast_scu.h>
 #include <asm/arch/ast-sdmc.h>
 #include <asm/io.h>
 
+/* TODO: Move this to GPIO specific file */
+#define GPIO_DVR			(0x0)
+#define GPIO_DDR			(0x4)
+#define GPIO_D3			(1 << 27)
+
 DECLARE_GLOBAL_DATA_PTR;
+
+#if defined(CONFIG_SHOW_BOOT_PROGRESS)
+void show_boot_progress(int progress)
+{
+    printf("Boot reached stage %d\n", progress);
+}
+#endif
 
 int board_init(void)
 {
+	/* adress of boot parameters */
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
-
 	return 0;
 }
 
@@ -68,16 +73,20 @@ int dram_init(void)
 	return 0;
 }
 
-#ifdef CONFIG_FTGMAC100
-int board_eth_init(bd_t *bd)
+void reset_phy(void)
 {
-        return ftgmac100_initialize(bd);
+	setbits_le32(AST_GPIO_BASE + GPIO_DDR, GPIO_D3);
+	clrbits_le32(AST_GPIO_BASE + GPIO_DVR, GPIO_D3);
+	mdelay(2);
+	setbits_le32(AST_GPIO_BASE + GPIO_DVR, GPIO_D3);
 }
-#endif
 
-#ifdef CONFIG_ASPEEDNIC
 int board_eth_init(bd_t *bd)
 {
-        return aspeednic_initialize(bd);
-}
+	debug("Board ETH init\n");
+#ifdef CONFIG_FTGMAC100
+	return ftgmac100_initialize(bd);
+#elif defined(CONFIG_ASPEEDNIC)
+	return aspeednic_initialize(bd);
 #endif
+}

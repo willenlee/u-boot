@@ -11,13 +11,16 @@
  *
  */
 
-#ifndef __AST_COMMON_CONFIG_H
-#define __AST_COMMON_CONFIG_H
+#ifndef __CONFIG_H
+#define __CONFIG_H
 
 #define CONFIG_ARCH_ASPEED
-#define CONFIG_EXTRA_ENV_SETTINGS ASPEED_ENV_SETTINGS
+#define CONFIG_ARCH_AST2400
+#define CONFIG_EXTRA_ENV_SETTINGS AST2400_ENV_SETTINGS
+
 
 #define CONFIG_ARCH_CPU_INIT
+#define CONFIG_MISC_INIT_R
 #define CONFIG_MACH_TYPE		MACH_TYPE_ASPEED
 
 #include <asm/arch/platform.h>
@@ -77,11 +80,14 @@
  */
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_CBSIZE		256		/* Console I/O Buffer Size */
+#define CONFIG_SYS_PROMPT		"ast# "
 
 /* Print Buffer Size */
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
 #define CONFIG_SYS_MAXARGS		16
 #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
+
+#define CONFIG_SYS_LOAD_ADDR		0x43000000	/* default load address */
 
 #define CONFIG_BOOTARGS			"console=ttyS4,115200n8 root=/dev/ram rw"
 
@@ -95,16 +101,39 @@
 #define CONFIG_ENV_OFFSET		0x60000	/* environment starts here  */
 #define CONFIG_ENV_SIZE			0x20000	/* Total Size of Environment Sector */
 
-#define CONFIG_BOOTCOMMAND	\
-	"fdt addr 20080000; " \
-	"if fdt get value ramdisk_conf /configurations/conf@1 ramdisk; then " \
-	"    bootm 20080000; else bootm 20080000 20300000; " \
-	"fi"
+#define CONFIG_BOOTCOMMAND	"bootm 20080000 20300000"
 #define CONFIG_ENV_OVERWRITE
 
-#define ASPEED_ENV_SETTINGS \
+#define AST2400_ENV_SETTINGS \
 	"verify=yes\0"	\
 	"spi_dma=yes\0" \
 	""
 
-#endif	/* __AST_COMMON_CONFIG_H */
+/* Ethernet */
+#define CONFIG_LIB_RAND
+#define CONFIG_ASPEEDNIC
+
+/* -------------------------------------------------------------------------
+ * DRAM Config
+ *
+ * 1. DRAM Size              //
+ *    CONFIG_DRAM_512MBIT    // 512M bit
+ *    CONFIG_DRAM_1GBIT      // 1G   bit (default)
+ *    CONFIG_DRAM_2GBIT      // 2G   bit
+ *    CONFIG_DRAM_4GBIT      // 4G   bit 
+ * 2. DRAM Speed             //
+ *    CONFIG_DRAM_336        // 336MHz (DDR-667)
+ *    CONFIG_DRAM_408        // 408MHz (DDR-800) (default)
+ * 3. VGA Mode
+ *    CONFIG_CRT_DISPLAY     // define to disable VGA function
+ * 4. ECC Function enable
+ *    CONFIG_DRAM_ECC        // define to enable ECC function
+ * 5. UART Debug Message
+ *    CONFIG_DRAM_UART_OUT   // enable output message at UART5
+ *    CONFIG_DRAM_UART_38400 // set the UART baud rate to 38400, default is 115200
+ */
+
+#define CONFIG_CPU_420 1
+#define CONFIG_DRAM_528 1
+
+#endif	/* __CONFIG_H */
