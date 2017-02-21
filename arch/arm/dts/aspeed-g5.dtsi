@@ -1,7 +1,3 @@
-/* This device tree is copied from
- * https://github.com/openbmc/linux/blob/c5682cb/arch/arm/boot/dts/aspeed-g5.dtsi
- */
-
 #include "skeleton.dtsi"
 
 / {
@@ -90,6 +86,44 @@
 				reg = < 1 >;
 				compatible = "jedec,spi-nor";
 				status = "disabled";
+			};
+		};
+
+		lpc: lpc@1e789000 {
+			compatible = "aspeed,ast2500-lpc", "simple-mfd";
+			reg = <0x1e789000 0x1000>;
+
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0x0 0x1e789000 0x1000>;
+
+			lpc_bmc: lpc-bmc@0 {
+				compatible = "aspeed,ast2500-lpc-bmc";
+				reg = <0x0 0x80>;
+			};
+
+			lpc_host: lpc-host@80 {
+				compatible = "aspeed,ast2500-lpc-host", "simple-mfd", "syscon";
+				reg = <0x80 0x1e0>;
+				reg-io-width = <4>;
+
+				#address-cells = <1>;
+				#size-cells = <1>;
+				ranges = <0x0 0x80 0x1e0>;
+
+				lpc_ctrl: lpc-ctrl@0 {
+					compatible = "aspeed,ast2500-lpc-ctrl";
+					reg = <0x0 0x80>;
+					status = "disabled";
+				};
+
+				mbox: mbox@180 {
+					compatible = "aspeed,ast2500-mbox";
+					reg = <0x180 0x5c>;
+					interrupts = <46>;
+					#mbox-cells = <1>;
+					status = "disabled";
+				};
 			};
 		};
 
@@ -982,7 +1016,8 @@
 				compatible = "aspeed,ast2500-gpio";
 				reg = <0x1e780000 0x1000>;
 				interrupts = <20>;
-				gpio-ranges = <&pinctrl 0 0 220>;
+				interrupt-controller;
+				gpio-ranges = <&pinctrl 0 0 232>;
 			};
 
 			timer: timer@1e782000 {
@@ -996,7 +1031,7 @@
 			};
 
 			ibt: ibt@1e789140 {
-				compatible = "aspeed,bt-host";
+				compatible = "aspeed,ast2500-ibt-bmc";
 				reg = <0x1e789140 0x18>;
 				interrupts = <8>;
 			};
