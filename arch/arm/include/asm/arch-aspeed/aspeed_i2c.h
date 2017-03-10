@@ -15,6 +15,9 @@
 #else
 #define  SCU_BASE       0x1E6E2000
 #define  I2C_BASE       0x1E78A000
+#endif
+
+#define  I2C_CHANNEL_BASE       0x1E78A040
 /* Cause U-boot i2c command limitation, it can't assign channel number. Our EEPROM is at channel 3 now*/
 /* AST2200's EEPROM is at channel 4 */
 #if defined(CONFIG_AST2200) || defined(CONFIG_AST2300) || defined(CONFIG_AST2400)
@@ -22,8 +25,12 @@
 #else
 #define  I2C_CHANNEL    3
 #endif
-#endif
 
+/* Multi-function Pin Control#5 */
+#define	SCU_MULTI_FUNCTION5			(SCU_BASE + 0x90)
+#define	PROTECTION_KEY_UNLOCK		0x1688A8A8
+/* I2C channel is 1-base on AST2300 datasheet, however it is 0-base on TM5. */
+#define	ENABLE_I2Cx_FUNCTION_PIN(channel)	(1 << (14 + channel) )
 /* Fix timing for EEPROM 100Khz*/
 #define  AC_TIMING      0x77743335
 #define  ALL_CLEAR      0xFFFFFFFF
@@ -34,17 +41,17 @@
 #define  SCU_MULTIFUNCTION_PIN_CTL5_REG    0x90
 
 /* I2C Register */
-#define  I2C_FUNCTION_CONTROL_REGISTER    (I2C_BASE + I2C_CHANNEL * 0x40 + 0x00)
-#define  I2C_AC_TIMING_REGISTER_1         (I2C_BASE + I2C_CHANNEL * 0x40 + 0x04)
-#define  I2C_AC_TIMING_REGISTER_2         (I2C_BASE + I2C_CHANNEL * 0x40 + 0x08)
-#define  I2C_INTERRUPT_CONTROL_REGISTER   (I2C_BASE + I2C_CHANNEL * 0x40 + 0x0c)
-#define  I2C_INTERRUPT_STATUS_REGISTER    (I2C_BASE + I2C_CHANNEL * 0x40 + 0x10)
-#define  I2C_COMMAND_REGISTER             (I2C_BASE + I2C_CHANNEL * 0x40 + 0x14)
-#define  I2C_DEVICE_ADDRESS_REGISTER      (I2C_BASE + I2C_CHANNEL * 0x40 + 0x18)
-#define  I2C_BUFFER_CONTROL_REGISTER      (I2C_BASE + I2C_CHANNEL * 0x40 + 0x1c)
-#define  I2C_BYTE_BUFFER_REGISTER         (I2C_BASE + I2C_CHANNEL * 0x40 + 0x20)
-#define  I2C_DMA_CONTROL_REGISTER         (I2C_BASE + I2C_CHANNEL * 0x40 + 0x24)
-#define  I2C_DMA_STATUS_REGISTER          (I2C_BASE + I2C_CHANNEL * 0x40 + 0x28)
+#define  I2C_FUNCTION_CONTROL_REGISTER(x)    (I2C_CHANNEL_BASE + x * 0x40 + 0x00)
+#define  I2C_AC_TIMING_REGISTER_1(x)         (I2C_CHANNEL_BASE + x * 0x40 + 0x04)
+#define  I2C_AC_TIMING_REGISTER_2(x)         (I2C_CHANNEL_BASE + x * 0x40 + 0x08)
+#define  I2C_INTERRUPT_CONTROL_REGISTER(x)   (I2C_CHANNEL_BASE + x * 0x40 + 0x0c)
+#define  I2C_INTERRUPT_STATUS_REGISTER(x)    (I2C_CHANNEL_BASE + x * 0x40 + 0x10)
+#define  I2C_COMMAND_REGISTER(x)             (I2C_CHANNEL_BASE + x * 0x40 + 0x14)
+#define  I2C_DEVICE_ADDRESS_REGISTER(x)      (I2C_CHANNEL_BASE + x * 0x40 + 0x18)
+#define  I2C_BUFFER_CONTROL_REGISTER(x)      (I2C_CHANNEL_BASE + x * 0x40 + 0x1c)
+#define  I2C_BYTE_BUFFER_REGISTER(x)         (I2C_CHANNEL_BASE + x * 0x40 + 0x20)
+#define  I2C_DMA_CONTROL_REGISTER(x)         (I2C_CHANNEL_BASE + x * 0x40 + 0x24)
+#define  I2C_DMA_STATUS_REGISTER(x)          (I2C_CHANNEL_BASE + x * 0x40 + 0x28)
 
 /* Command Bit */
 #define  MASTER_START_COMMAND    (1 << 0)
