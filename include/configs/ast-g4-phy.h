@@ -24,11 +24,41 @@
 #define CONFIG_DRAM_528			1
 
 /*
+ * Environment Config
+ */
+#define CONFIG_CMDLINE_TAG	 1		/* enable passing of ATAGs	*/
+#define CONFIG_SETUP_MEMORY_TAGS 1
+#define CONFIG_INITRD_TAG	 1
+#define	CONFIG_BOOTARGS 	"console=ttyS4,38400n8 root=/dev/ram rw"
+#define CONFIG_UPDATE           "tftp 40800000 ast2400.scr; so 40800000'"
+
+#define CONFIG_BOOTDELAY	3		/* autoboot after 3 seconds	*/
+#define CONFIG_AUTOBOOT_KEYED
+#define CONFIG_AUTOBOOT_PROMPT		\
+	"autoboot in %d seconds (stop with 'Delete' key)...\n", bootdelay
+#define CONFIG_AUTOBOOT_STOP_STR	"\x1b\x5b\x33\x7e" /* 'Delete', ESC[3~ */
+#define CONFIG_ZERO_BOOTDELAY_CHECK
+
+#ifdef CONFIG_FLASH_AST2300
+#define CONFIG_BOOTCOMMAND	"bootm 20080000 20300000"
+#else
+#ifdef	CONFIG_SYS_FLASH_CFI
+#define CONFIG_BOOTCOMMAND	"bootm 10080000 10300000"
+#else
+#define CONFIG_BOOTCOMMAND	"bootm 14080000 14300000"
+#endif
+#endif
+#define CONFIG_BOOTFILE		"all.bin"
+#define CONFIG_ENV_OVERWRITE
+
+
+/*
  * Command line configuration.
  */
 
 #define CONFIG_CMD_I2C
 #define CONFIG_CMD_EEPROM
+#define CONFIG_CMD_NET
 
 /*
  * I2C configuration
