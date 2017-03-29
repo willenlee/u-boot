@@ -49,6 +49,48 @@ void eth_set_dev(struct eth_device *dev)
 	eth_current = dev;
 }
 
+extern void enable_i2c_channel(int i2cchannel);
+extern void i2c_set_channel(unsigned char channel_num);
+static void set_eth_env_from_eeprom(struct eth_device *dev_eth)
+{
+	u8 mac01[6];
+	u8 mac02[6];
+	char *base_name = "eth";
+	struct eth_device dev;
+	int i, j;
+	int ret;
+
+	i2c_set_channel(CONFIG_EEPROM_BUS_NUM);
+
+	eeprom_init(CONFIG_EEPROM_BUS_NUM);
+	enable_i2c_channel(CONFIG_EEPROM_BUS_NUM);
+#ifdef CONFIG_SYS_I2C_MAC01_OFFSET
+	ret = eeprom_read(CONFIG_SYS_I2C_EEPROM_ADDR, CONFIG_SYS_I2C_MAC01_OFFSET, mac01, 6);
+	if (ret == 0)
+	{
+		eth_setenv_enetaddr_by_index(base_name, 0, mac01);
+		memcpy(&dev, dev_eth, sizeof(dev));
+		dev.iobase = 0x1E660000;
+		dev.index = 1;
+		memcpy(dev.enetaddr, mac01, 6);
+		dev.write_hwaddr(&dev);
+	}
+#endif
+
+#ifdef CONFIG_SYS_I2C_MAC02_OFFSET
+	ret = eeprom_read(CONFIG_SYS_I2C_EEPROM_ADDR, CONFIG_SYS_I2C_MAC02_OFFSET, mac02, 6);
+	if (ret == 0)
+	{
+		eth_setenv_enetaddr_by_index(base_name, 1, mac02);
+		dev.iobase = 0x1E680000;
+		dev.index = 2;
+		memcpy(dev.enetaddr, mac02, 6);
+		dev.write_hwaddr(&dev);
+	}
+#endif
+	saveenv();
+}
+
 struct eth_device *eth_get_dev_by_name(const char *devname)
 {
 	struct eth_device *dev, *target_dev;
@@ -154,14 +196,14 @@ int eth_write_hwaddr(struct eth_device *dev, const char *base_name,
 		eth_setenv_enetaddr_by_index(base_name, eth_number,
 					     dev->enetaddr);
 	} else if (is_zero_ethaddr(dev->enetaddr)) {
-#ifdef CONFIG_NET_RANDOM_ETHADDR
+#if defined(CONFIG_RANDOM_MACADDR) && (CONFIG_RANDOM_MACADDR==1)
 		net_random_ethaddr(dev->enetaddr);
 		printf("\nWarning: %s (eth%d) using random MAC address - %pM\n",
 		       dev->name, eth_number, dev->enetaddr);
 #else
 		printf("\nError: %s address not set.\n",
 		       dev->name);
-		return -EINVAL;
+		return -1;
 #endif
 	}
 
@@ -263,6 +305,9 @@ int eth_initialize(void)
 		char *ethprime = getenv("ethprime");
 
 		bootstage_mark(BOOTSTAGE_ID_NET_ETH_INIT);
+		#ifdef CONFIG_SET_ETHADDR_EEPOM
+			set_eth_env_from_eeprom(dev);
+		#endif
 		do {
 			if (dev->index)
 				puts(", ");
@@ -277,9 +322,10 @@ int eth_initialize(void)
 			if (strchr(dev->name, ' '))
 				puts("\nWarning: eth device name has a space!"
 					"\n");
-
-			eth_write_hwaddr(dev, "eth", dev->index);
-
+			#ifndef CONFIG_SET_ETHADDR_EEPOM
+  			if (eth_write_hwaddr(dev, "eth", dev->index))
+  				puts("\nWarning: failed to set MAC address\n");
+ 			#endif
 			dev = dev->next;
 			num_devices++;
 		} while (dev != eth_devices);
