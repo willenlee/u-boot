@@ -22,14 +22,14 @@
 /* platform.S settings */
 #define CONFIG_CPU_420			1
 #define CONFIG_DRAM_528			1
-
+#define CONFIG_BAUDRATE                 115200
 /*
  * Environment Config
  */
 #define CONFIG_CMDLINE_TAG	 1		/* enable passing of ATAGs	*/
 #define CONFIG_SETUP_MEMORY_TAGS 1
 #define CONFIG_INITRD_TAG	 1
-#define	CONFIG_BOOTARGS 	"console=ttyS4,38400n8 root=/dev/ram rw"
+#define	CONFIG_BOOTARGS 	"console=ttyS4,115200n8 root=/dev/ram rw"
 #define CONFIG_UPDATE           "tftp 40800000 ast2400.scr; so 40800000'"
 
 #define CONFIG_BOOTDELAY	3		/* autoboot after 3 seconds	*/
