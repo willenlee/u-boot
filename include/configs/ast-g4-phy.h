@@ -50,7 +50,8 @@
 #endif
 #define CONFIG_BOOTFILE		"all.bin"
 #define CONFIG_ENV_OVERWRITE
-
+#define CONFIG_ASPEED_WATCHDOG_TIMEOUT (1*66)
+#define CONFIG_ASPEED_ENABLE_WATCHDOG
 
 /*
  * Command line configuration.
