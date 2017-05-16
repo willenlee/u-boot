@@ -58,8 +58,21 @@ void show_boot_progress(int progress)
 
 int board_init(void)
 {
+	unsigned long reg;
+
 	/* adress of boot parameters */
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
+    
+	//The system boot status LED  lit up by u-boot#GPIOD5
+	//set GPIOD5 data low
+	reg = readl(AST_GPIO_BASE | 0x00);
+	reg = reg & ~(1<<29);
+	writel(reg, AST_GPIO_BASE | 0x00);
+	//set GPIOD5 direction output
+	reg = readl(AST_GPIO_BASE | 0x04);
+	reg = reg | (1<<29);
+	writel(reg, AST_GPIO_BASE | 0x04);
+
 	return 0;
 }
 
