@@ -133,10 +133,12 @@ int mac_read_from_eeprom(void)
 	uint8_t fru_mac_addr[MACADDR_SIZE];
 	memcpy(fru_mac_addr, fru_iua.mac_addr, MACADDR_SIZE);
 
-	int i = 1;
+	int i = fru_iua.num_mac_addrs -1 ;
+	int add_count = 0;
+	uint8_t original_mac_addr_five = fru_mac_addr[5];
 	debug("Number of Addrs: %d\n", fru_iua.num_mac_addrs);
-	for (; i < fru_iua.num_mac_addrs; ++i) {
-		fru_mac_addr[5] += 1;
+	for (; i > 0 ; i--, add_count++) {
+		fru_mac_addr[5] = original_mac_addr_five + add_count;
 		if (fru_mac_addr[5] == 0) fru_mac_addr[4] += 1;
 		if (fru_mac_addr[4] == 0) fru_mac_addr[3] += 1;
 		if (fru_mac_addr[3] == 0) fru_mac_addr[2] += 1;
