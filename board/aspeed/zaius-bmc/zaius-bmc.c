@@ -73,10 +73,8 @@ int board_init(void)
 	reg = reg | (1<<29);
 	writel(reg, AST_GPIO_BASE | 0x04);
 
-	printf("===> Doyle disable watchdog==== \n");
-	//disable Watchdog2
+	//disable watchdog2 to bump to linux
 	writel(0x0, 0x1e78502c);
-
 	return 0;
 }
 

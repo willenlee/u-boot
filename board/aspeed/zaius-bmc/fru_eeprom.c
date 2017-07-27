@@ -107,7 +107,6 @@ int do_mac(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			   fru_mac_addr[3],
 			   fru_mac_addr[4],
 			   fru_mac_addr[5]);
-		fru_mac_addr[5] += 1;
 		if (fru_mac_addr[5] == 0) fru_mac_addr[4] += 1;
 		if (fru_mac_addr[4] == 0) fru_mac_addr[3] += 1;
 		if (fru_mac_addr[3] == 0) fru_mac_addr[2] += 1;
