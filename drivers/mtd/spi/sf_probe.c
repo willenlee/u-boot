@@ -49,6 +49,9 @@ static int spi_flash_probe_slave(struct spi_flash *flash)
 	ret = spi_flash_mtd_register(flash);
 #endif
 
+	//AST:Enable spi dma mode
+	//spi_dma(spi, flash->memory_map + flash->size, flash->memory_map, flash->size);
+
 err_read_id:
 	spi_release_bus(spi);
 	return ret;

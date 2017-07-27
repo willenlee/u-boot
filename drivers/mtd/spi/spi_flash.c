@@ -25,9 +25,10 @@ DECLARE_GLOBAL_DATA_PTR;
 static void spi_flash_addr(u32 addr, u8 *cmd)
 {
 	/* cmd[0] is actual command */
-	cmd[1] = addr >> 16;
-	cmd[2] = addr >> 8;
-	cmd[3] = addr >> 0;
+	cmd[1] = addr >> (SPI_FLASH_ADDR_LEN * 8 -  8);
+	cmd[2] = addr >> (SPI_FLASH_ADDR_LEN * 8 - 16);
+	cmd[3] = addr >> (SPI_FLASH_ADDR_LEN * 8 - 24);
+	cmd[4] = addr >> (SPI_FLASH_ADDR_LEN * 8 - 32);
 }
 
 static int read_sr(struct spi_flash *flash, u8 *rs)
@@ -359,8 +360,8 @@ int spi_flash_cmd_erase_ops(struct spi_flash *flash, u32 offset, size_t len)
 #endif
 		spi_flash_addr(erase_addr, cmd);
 
-		debug("SF: erase %2x %2x %2x %2x (%x)\n", cmd[0], cmd[1],
-		      cmd[2], cmd[3], erase_addr);
+		debug("SF: erase %2x %2x %2x %2x %2x (%x)\n", cmd[0], cmd[1],
+		      cmd[2], cmd[3], cmd[4], erase_addr);
 
 		ret = spi_flash_write_common(flash, cmd, sizeof(cmd), NULL, 0);
 		if (ret < 0) {
@@ -417,8 +418,8 @@ int spi_flash_cmd_write_ops(struct spi_flash *flash, u32 offset,
 
 		spi_flash_addr(write_addr, cmd);
 
-		debug("SF: 0x%p => cmd = { 0x%02x 0x%02x%02x%02x } chunk_len = %zu\n",
-		      buf + actual, cmd[0], cmd[1], cmd[2], cmd[3], chunk_len);
+		debug("SF: 0x%p => cmd = { 0x%02x 0x%02x%02x%02x%02x } chunk_len = %zu\n",
+		      buf + actual, cmd[0], cmd[1], cmd[2], cmd[3],  cmd[4], chunk_len);
 
 		ret = spi_flash_write_common(flash, cmd, sizeof(cmd),
 					buf + actual, chunk_len);
@@ -841,7 +842,7 @@ int stm_unlock(struct spi_flash *flash, u32 ofs, size_t len)
 
 
 #ifdef CONFIG_SPI_FLASH_MACRONIX
-static int macronix_quad_enable(struct spi_flash *flash)
+int macronix_quad_enable(struct spi_flash *flash)
 {
 	u8 qeb_status;
 	int ret;
@@ -949,6 +950,8 @@ static int set_quad_mode(struct spi_flash *flash, u8 idcode0)
 #if CONFIG_IS_ENABLED(OF_CONTROL)
 int spi_flash_decode_fdt(const void *blob, struct spi_flash *flash)
 {
+
+	printf("\n AST william");
 #ifdef CONFIG_DM_SPI_FLASH
 	fdt_addr_t addr;
 	fdt_size_t size;
@@ -956,15 +959,18 @@ int spi_flash_decode_fdt(const void *blob, struct spi_flash *flash)
 
 	addr = fdtdec_get_addr_size(blob, node, "memory-map", &size);
 	if (addr == FDT_ADDR_T_NONE) {
+		printf("\n AST william2");
 		debug("%s: Cannot decode address\n", __func__);
 		return 0;
 	}
 
-	if (flash->size != size) {
+	if (flash->size > size) {
+		printf("\n AST william3");
 		debug("%s: Memory map must cover entire device\n", __func__);
 		return -1;
 	}
 	flash->memory_map = map_sysmem(addr, size);
+	printf("\n AST william4");
 #endif
 
 	return 0;
@@ -1177,32 +1183,51 @@ int spi_flash_scan(struct spi_flash *flash)
 	/* Now erase size becomes valid sector size */
 	flash->sector_size = flash->erase_size;
 
-	/* Look for the fastest read cmd */
-	cmd = fls(params->e_rd_cmd & spi->mode_rx);
-	if (cmd) {
-		cmd = spi_read_cmds_array[cmd - 1];
-		flash->read_cmd = cmd;
-	} else {
-		/* Go for default supported read cmd */
+	/* Look for read commands */
+	if (spi->mode & SPI_RX_SLOW){
+		flash->read_cmd = CMD_READ_ARRAY_SLOW;
+	}
+	else if (spi->mode & SPI_RX_QUAD && spi->mode & SPI_TX_QUAD && info->flags & RD_QUADIO){
+		flash->read_cmd = CMD_READ_QUAD_IO_FAST;
+	}
+	else if (spi->mode & SPI_RX_QUAD && info->flags & RD_QUAD){
+		flash->read_cmd = CMD_READ_QUAD_OUTPUT_FAST;
+	}
+	else if (spi->mode & SPI_RX_DUAL && spi->mode & SPI_TX_DUAL && info->flags & RD_DUALIO){
+		flash->read_cmd = CMD_READ_DUAL_IO_FAST;
+	}
+	else if (spi->mode & SPI_RX_DUAL && info->flags & RD_DUAL){
+		flash->read_cmd = CMD_READ_DUAL_OUTPUT_FAST;
+	}
+	else{
 		flash->read_cmd = CMD_READ_ARRAY_FAST;
 	}
 
-	/* Not require to look for fastest only two write cmds yet */
-	if (params->flags & WR_QPP && spi->mode & SPI_TX_QUAD)
-		flash->write_cmd = CMD_QUAD_PAGE_PROGRAM;
-	else
+	/* Look for write commands */
+	if (info->flags & WR_QPP && spi->mode & SPI_TX_QUAD){
+		if(JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_WINBOND){
+			flash->write_cmd = CMD_QUAD_PAGE_PROGRAM_WINBOND;
+		}else if(JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_MACRONIX){
+			flash->write_cmd = CMD_QUAD_PAGE_PROGRAM_MXIC;
+		}
+	}else{
 		/* Go for default supported write cmd */
 		flash->write_cmd = CMD_PAGE_PROGRAM;
+	}
 
 	/* Set the quad enable bit - only for quad commands */
 	if ((flash->read_cmd == CMD_READ_QUAD_OUTPUT_FAST) ||
 	    (flash->read_cmd == CMD_READ_QUAD_IO_FAST) ||
-	    (flash->write_cmd == CMD_QUAD_PAGE_PROGRAM)) {
-		ret = set_quad_mode(flash, idcode[0]);
+	    (flash->write_cmd == CMD_QUAD_PAGE_PROGRAM_WINBOND) ||
+	    (flash->write_cmd == CMD_QUAD_PAGE_PROGRAM_MXIC)) {
+#if 0
+		ret = set_quad_mode(flash, info);
 		if (ret) {
-			debug("SF: Fail to set QEB for %02x\n", idcode[0]);
+			debug("SF: Fail to set QEB for %02x\n",
+			      JEDEC_MFR(info));
 			return -EINVAL;
 		}
+#endif
 	}
 
 	/* Read dummy_byte: dummy byte is determined based on the
