@@ -1036,23 +1036,6 @@
 				interrupts = <8>;
 			};
 
-			wdt1: wdt@1e785000 {
-				compatible = "aspeed,ast2500-wdt";
-				reg = <0x1e785000 0x1c>;
-			};
-
-			wdt2: wdt@1e785020 {
-				compatible = "aspeed,ast2500-wdt";
-				reg = <0x1e785020 0x1c>;
-				status = "disabled";
-			};
-
-			wdt3: wdt@1e785040 {
-				compatible = "aspeed,wdt";
-				reg = <0x1e785074 0x1c>;
-				status = "disabled";
-			};
-
 			uart1: serial@1e783000 {
 				compatible = "ns16550a";
 				reg = <0x1e783000 0x1000>;
