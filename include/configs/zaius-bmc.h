@@ -27,7 +27,6 @@
 
 #define CONFIG_MII
 #define CONFIG_CMD_MII
-#define CONFIG_RESET_PHY_R
 
 #define CONFIG_PHY_MAX_ADDR	32	/* this comes from <linux/phy.h> */
 
