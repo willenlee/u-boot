@@ -18,14 +18,20 @@
 /* From the board config file */
 #define CONFIG_MAC1_PHY_SETTING         2
 #define CONFIG_MAC2_PHY_SETTING         0
-#define CONFIG_ASPEED_MAC_NUMBER  1
-#define CONFIG_ASPEED_MAC_CONFIG  1 // config MAC1
+#ifndef CONFIG_ASPEED_MAC_NUMBER
+#	define CONFIG_ASPEED_MAC_NUMBER  1
+#endif
+#ifndef CONFIG_ASPEED_MAC_CONFIG
+#	define CONFIG_ASPEED_MAC_CONFIG  1 // config MAC1
+#endif
 #define _PHY_SETTING_CONCAT(mac) CONFIG_MAC##mac##_PHY_SETTING
 #define _GET_MAC_PHY_SETTING(mac) _PHY_SETTING_CONCAT(mac)
 #define CONFIG_ASPEED_MAC_PHY_SETTING \
 	  _GET_MAC_PHY_SETTING(CONFIG_ASPEED_MAC_CONFIG)
 #define CONFIG_MAC_INTERFACE_CLOCK_DELAY        0x2255
-#define CONFIG_RANDOM_MACADDR
+#define CONFIG_RANDOM_MACADDR 1
+
+#define CONFIG_MAC2_ENABLE 1
 
 
 #include <malloc.h>
@@ -97,7 +103,7 @@ static u8 g_phy_addr = 0;
 #define DBLAC_REG     0x38        // DMA Burst Length and Arbitration control register
 
 #define DMAFIFOS_REG            0x3c  //
-#define FEAR_REG      0x44  //
+#define FEAR_REG      0x40  //
 #define TPAFCR_REG      0x48  //
 #define RBSR_REG      0x4c  //for NC Body
 #define MACCR_REG     0x50        // MAC control register
@@ -1136,6 +1142,8 @@ static int aspeednic_init(struct eth_device* dev, bd_t* bis)
 	unsigned long i, Package_Found = 0, Channel_Found = 0, Re_Send = 0, Link_Status;
 
 	RESET_DE4X5(dev);
+
+	OUTL(dev, 0, FEAR_REG);
 
 	aspeednic_probe_phy(dev);
 

@@ -7,18 +7,27 @@
 
 #include <common.h>
 #include <netdev.h>
-
 #include <asm/arch/platform.h>
 #include <asm/arch/ast-sdmc.h>
-#include <asm/arch/ast_scu.h>
 #include <asm/arch/regs-ahbc.h>
 #include <asm/arch/regs-scu.h>
 #include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#if defined(CONFIG_SHOW_BOOT_PROGRESS)
+void show_boot_progress(int progress)
+{
+    printf("Boot reached stage %d\n", progress);
+}
+#endif
+
 int board_init(void)
 {
+	/* The BSP did this in the cpu code */
+	icache_enable();
+	dcache_enable();
+
 	/* adress of boot parameters */
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
 	gd->flags = 0;
@@ -57,23 +66,13 @@ int misc_init_r(void)
 
 int dram_init(void)
 {
-	u32 vga = ast_scu_get_vga_memsize();
-	u32 dram = ast_sdmc_get_mem_size();
-	gd->ram_size = dram - vga;
+	/* dram_init must store complete ramsize in gd->ram_size */
+	gd->ram_size = ast_sdmc_get_mem_size();
 
 	return 0;
 }
 
-#ifdef CONFIG_FTGMAC100
-int board_eth_init(bd_t *bd)
-{
-	return ftgmac100_initialize(bd);
-}
-#endif
-
-#ifdef CONFIG_ASPEEDNIC
 int board_eth_init(bd_t *bd)
 {
 	return aspeednic_initialize(bd);
 }
-#endif

@@ -1,3 +1,7 @@
+/* This device tree is copied from
+ * https://github.com/openbmc/linux/blob/c5682cb/arch/arm/boot/dts/aspeed-g5.dtsi
+ */
+
 #include "skeleton.dtsi"
 
 / {

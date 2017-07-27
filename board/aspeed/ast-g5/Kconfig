@@ -22,5 +22,6 @@ config SYS_CONFIG_NAME
 	default "ast-g5-ncsi" if ASPEED_NET_NCSI
     default "zaius-bmc" if ASPEED_ZAIUS
 	default "ast-g5-ncsi-2boot" if ASPEED_NET_NCSI && FIRMWARE_2ND_BOOT
+        default "zaius-bmc" if ASPEED_ZAIUS
 
 endif

@@ -11,11 +11,15 @@
  *
  */
 
-#ifndef __AST_COMMON_CONFIG_H
-#define __AST_COMMON_CONFIG_H
+#ifndef __CONFIG_H
+#define __CONFIG_H
 
 #define CONFIG_ARCH_ASPEED
-#define CONFIG_EXTRA_ENV_SETTINGS ASPEED_ENV_SETTINGS
+#define CONFIG_ARCH_AST2500
+#define CONFIG_EXTRA_ENV_SETTINGS AST2500_ENV_SETTINGS
+
+/* TODO: Find out if we require this */
+#define CONFIG_AST_FPGA_VER 4 /* for arm1176 */
 
 #define CONFIG_ARCH_CPU_INIT
 #define CONFIG_MACH_TYPE		MACH_TYPE_ASPEED
@@ -41,6 +45,7 @@
 #define CONFIG_NR_DRAM_BANKS		1
 
 #define CONFIG_SYS_TEXT_BASE		0x00000000
+#define CONFIG_SYS_UBOOT_BASE		CONFIG_SYS_TEXT_BASE
 
 #define CONFIG_SYS_MALLOC_LEN   	(0x1000 + 4*1024*1024) /* malloc() len */
 
@@ -77,11 +82,14 @@
  */
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_CBSIZE		256		/* Console I/O Buffer Size */
+#define CONFIG_SYS_PROMPT		"ast# "
 
 /* Print Buffer Size */
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
 #define CONFIG_SYS_MAXARGS		16
 #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
+
+#define CONFIG_SYS_LOAD_ADDR		0x83000000	/* default load address */
 
 #define CONFIG_BOOTARGS			"console=ttyS4,115200n8 root=/dev/ram rw"
 
@@ -95,16 +103,19 @@
 #define CONFIG_ENV_OFFSET		0x60000	/* environment starts here  */
 #define CONFIG_ENV_SIZE			0x20000	/* Total Size of Environment Sector */
 
-#define CONFIG_BOOTCOMMAND	\
-	"fdt addr 20080000; " \
-	"if fdt get value ramdisk_conf /configurations/conf@1 ramdisk; then " \
-	"    bootm 20080000; else bootm 20080000 20300000; " \
-	"fi"
+#define CONFIG_BOOTCOMMAND	"bootm 20080000 20300000"
 #define CONFIG_ENV_OVERWRITE
 
-#define ASPEED_ENV_SETTINGS \
+#define AST2500_ENV_SETTINGS					\
 	"verify=yes\0"	\
 	"spi_dma=yes\0" \
 	""
 
-#endif	/* __AST_COMMON_CONFIG_H */
+/* Ethernet */
+#define CONFIG_LIB_RAND
+#define CONFIG_ASPEEDNIC
+
+/* TODO: How does this work? */
+#define	CONFIG_DRAM_ECC_SIZE	0x10000000
+
+#endif	/* __CONFIG_H */
