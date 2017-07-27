@@ -14,6 +14,8 @@
 #define CONFIG_ARCH_AST2500
 #define CONFIG_SYS_LOAD_ADDR		0x83000000
 
+#define CONFIG_HW_WATCHDOG
+
 #include <configs/ast-common.h>
 
 /* arm1176/start.S */
