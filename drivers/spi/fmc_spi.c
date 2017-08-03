@@ -31,7 +31,7 @@
 #include "../mtd/spi/sf_internal.h"
 
 #include <asm/arch/regs-fmc.h>
-#include <asm/arch/ast-scu.h>
+#include <asm/arch/ast_scu.h>
 #include <asm/arch/aspeed.h>
 
 struct ast_spi_host {
@@ -150,7 +150,7 @@ void spi_init(void)
 {
 	SPIDBUG("spi_init \n");
 
-
+#if 0
 	struct ast_spi_host	*spi;
 	ulong ulCtrlData, CtrlOffset = CS0_CTRL;
 	u32 div;
@@ -265,7 +265,7 @@ void spi_init(void)
 #endif
 	//free flash
 	//spi_flash_free(flash);
-
+#endif
 	printf("Init OK! \n");
 }
 
@@ -549,7 +549,7 @@ void flash_set_3byte(struct ast_spi_host *spi)
 	spi_flash_cmd(spi, CMD_3BYTE_MODE, NULL, 0);
 	//udelay(200);
 }
-
+#if 0
 void memmove_dma(void * dest,const void *src,size_t count)
 {
 	ulong data;
@@ -578,3 +578,4 @@ void memmove_dma(void * dest,const void *src,size_t count)
 	/* clear status */
 	*(ulong *) (AST_FMC_BASE + REG_FLASH_INTERRUPT_STATUS) |= FLASH_STATUS_DMA_CLEAR;
 }
+#endif

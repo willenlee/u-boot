@@ -88,24 +88,13 @@
 
 #define CONFIG_AST_SPI_NOR    /* AST SPI NOR Flash */
 #define CONFIG_FMC_CS			1
-#ifdef CONFIG_AST_SPI_NOR
-#define CONFIG_SYS_MAX_FLASH_BANKS	(CONFIG_FMC_CS + 1)
-#else
 #define CONFIG_SYS_MAX_FLASH_BANKS 	(CONFIG_FMC_CS)
-#endif
 #define CONFIG_SYS_MAX_FLASH_SECT	(8192)		/* max number of sectors on one chip */
 #define CONFIG_ENV_IS_IN_FLASH		1
-#define CONFIG_ENV_IS_IN_SPI_FLASH      1
 #define CONFIG_ENV_ADDR			(AST_FMC_CS0_BASE + 0x60000)
 
 #define CONFIG_ENV_OFFSET		0x60000	/* environment starts here  */
 #define CONFIG_ENV_SIZE			0x20000	/* Total Size of Environment Sector */
-#define CONFIG_ENV_SECT_SIZE		0x20000		//4K sector
-
-#define CONFIG_ENV_SPI_BUS		0
-#define CONFIG_ENV_SPI_CS		0
-#define CONFIG_ENV_SPI_MAX_HZ	50000000 //70MHz
-#define CONFIG_ENV_SPI_MODE		SPI_MODE_3
 
 #define CONFIG_BOOTCOMMAND	\
 	"fdt addr 20080000; " \

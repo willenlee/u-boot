@@ -1187,16 +1187,16 @@ int spi_flash_scan(struct spi_flash *flash)
 	if (spi->mode & SPI_RX_SLOW){
 		flash->read_cmd = CMD_READ_ARRAY_SLOW;
 	}
-	else if (spi->mode & SPI_RX_QUAD && spi->mode & SPI_TX_QUAD && info->flags & RD_QUADIO){
+	else if (spi->mode & SPI_RX_QUAD && spi->mode & SPI_TX_QUAD && params->flags & RD_QUADIO){
 		flash->read_cmd = CMD_READ_QUAD_IO_FAST;
 	}
-	else if (spi->mode & SPI_RX_QUAD && info->flags & RD_QUAD){
+	else if (spi->mode & SPI_RX_QUAD && params->flags & RD_QUAD){
 		flash->read_cmd = CMD_READ_QUAD_OUTPUT_FAST;
 	}
-	else if (spi->mode & SPI_RX_DUAL && spi->mode & SPI_TX_DUAL && info->flags & RD_DUALIO){
+	else if (spi->mode & SPI_RX_DUAL && spi->mode & SPI_TX_DUAL && params->flags & RD_DUALIO){
 		flash->read_cmd = CMD_READ_DUAL_IO_FAST;
 	}
-	else if (spi->mode & SPI_RX_DUAL && info->flags & RD_DUAL){
+	else if (spi->mode & SPI_RX_DUAL && params->flags & RD_DUAL){
 		flash->read_cmd = CMD_READ_DUAL_OUTPUT_FAST;
 	}
 	else{
@@ -1204,10 +1204,10 @@ int spi_flash_scan(struct spi_flash *flash)
 	}
 
 	/* Look for write commands */
-	if (info->flags & WR_QPP && spi->mode & SPI_TX_QUAD){
-		if(JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_WINBOND){
+	if (params->flags & WR_QPP && spi->mode & SPI_TX_QUAD){
+		if(JEDEC_MFR(params) == SPI_FLASH_CFI_MFR_WINBOND){
 			flash->write_cmd = CMD_QUAD_PAGE_PROGRAM_WINBOND;
-		}else if(JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_MACRONIX){
+		}else if(JEDEC_MFR(params) == SPI_FLASH_CFI_MFR_MACRONIX){
 			flash->write_cmd = CMD_QUAD_PAGE_PROGRAM_MXIC;
 		}
 	}else{
