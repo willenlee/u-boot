@@ -194,10 +194,4 @@ config TI_QSPI
 	  Enable the TI Quad-SPI (QSPI) driver for DRA7xx and AM43xx evms.
 	  This driver support spi flash single, quad and memory reads.
 
-config AST_FMC
-	bool "ASPEED FMC driver"
-	help
-	  Enable the ASPEED FMC driver for AST2400/AST2500
-
-
 endmenu # menu "SPI Support"

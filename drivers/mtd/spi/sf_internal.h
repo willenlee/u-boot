@@ -53,8 +53,8 @@ enum spi_nor_option_flags {
 	SNOR_F_USE_FSR		= BIT(1),
 };
 
-#define SPI_FLASH_ADDR_LEN		4
-#define SPI_FLASH_CMD_LEN		(1 + SPI_FLASH_ADDR_LEN)
+#define SPI_FLASH_3B_ADDR_LEN		3
+#define SPI_FLASH_CMD_LEN		(1 + SPI_FLASH_3B_ADDR_LEN)
 #define SPI_FLASH_16MB_BOUN		0x1000000
 
 /* CFI Manufacture ID's */
@@ -76,8 +76,7 @@ enum spi_nor_option_flags {
 #define CMD_PAGE_PROGRAM		0x02
 #define CMD_WRITE_DISABLE		0x04
 #define CMD_WRITE_ENABLE		0x06
-#define CMD_QUAD_PAGE_PROGRAM_WINBOND		0x32
-#define CMD_QUAD_PAGE_PROGRAM_MXIC			0x38
+#define CMD_QUAD_PAGE_PROGRAM		0x32
 #define CMD_WRITE_EVCR			0x61
 
 /* Read commands */
@@ -101,10 +100,6 @@ enum spi_nor_option_flags {
 # define CMD_EXTNADDR_WREAR		0xC5
 # define CMD_EXTNADDR_RDEAR		0xC8
 #endif
-
-/* Address Mode Command */
-#define CMD_4BYTE_MODE	0xB7
-#define CMD_3BYTE_MODE	0xE9
 
 /* Common status */
 #define STATUS_WIP			BIT(0)

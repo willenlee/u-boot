@@ -31,9 +31,6 @@
 # define CONFIG_ENV_SPI_MODE	SPI_MODE_3
 #endif
 
-env_t *env_ptr = (env_t *)CONFIG_ENV_ADDR;
-static env_t *flash_addr = (env_t *)CONFIG_ENV_ADDR;
-
 #ifdef CONFIG_ENV_OFFSET_REDUND
 static ulong env_offset		= CONFIG_ENV_OFFSET;
 static ulong env_new_offset	= CONFIG_ENV_OFFSET_REDUND;
@@ -278,7 +275,7 @@ int saveenv(void)
 		if (!saved_buffer)
 			goto done;
 
-		ret = spi_flash_read(env_flash, saved_offset + CONFIG_ENV_OFFSET,
+		ret = spi_flash_read(env_flash, saved_offset,
 			saved_size, saved_buffer);
 		if (ret)
 			goto done;
@@ -327,7 +324,7 @@ void env_relocate_spec(void)
 {
 	int ret;
 	char *buf = NULL;
-#if 0
+
 	buf = (char *)memalign(ARCH_DMA_MINALIGN, CONFIG_ENV_SIZE);
 	env_flash = spi_flash_probe(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
 			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
@@ -344,9 +341,8 @@ void env_relocate_spec(void)
 		set_default_env("!spi_flash_read() failed");
 		goto out;
 	}
-#endif
-	ret = env_import((char *)flash_addr, 1);
-#if 0
+
+	ret = env_import(buf, 1);
 	if (ret)
 		gd->env_valid = 1;
 out:
@@ -354,19 +350,14 @@ out:
 	if (buf)
 		free(buf);
 	env_flash = NULL;
-#endif
 }
 #endif
 
 int env_init(void)
 {
-	if (crc32(0, env_ptr->data, ENV_SIZE) == env_ptr->crc) {
-		gd->env_addr	= (ulong)&(env_ptr->data);
-		gd->env_valid	= 1;
-		return 0;
-	}
+	/* SPI flash isn't usable before relocation */
+	gd->env_addr = (ulong)&default_environment[0];
+	gd->env_valid = 1;
 
-	gd->env_addr	= (ulong)&default_environment[0];
-	gd->env_valid	= 0;
 	return 0;
 }

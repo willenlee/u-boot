@@ -183,12 +183,8 @@ static void reset_flash (flash_info_t * info)
         if (info->dualport)
             ulCtrlData  |= 0x08;
 #endif
-        //*(ulong *) (info->reg_base + CtrlOffset) = ulCtrlData;
-        //printf("\nulCtrlData = %x", ulCtrlData);
-        if (info->dualport)
-        	ulCtrlData  |= 0x08;//3b for dual read
-
         *(ulong *) (info->reg_base + CtrlOffset) = ulCtrlData;
+
 }
 
 static void enable_write (flash_info_t * info)
@@ -962,25 +958,20 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			break;
 
 		case MX25L25635E:
+			info->sector_count = 256;
+			info->size = 0x1000000;
+			erase_region_size  = 0x10000;
+			info->readcmd = 0x0b;
+			info->dualport = 0;
+			info->dummybyte = 1;
+			info->buffersize = 256;
+			WriteClk = 50;
+			EraseClk = 20;
+			ReadClk  = 50;
+#if	1
 			info->sector_count = 512;
 			info->size = 0x2000000;
 			info->address32 = 1;
-			erase_region_size  = 0x10000;
-			info->readcmd = 0x3b;
-			info->dualport = 1;
-			info->dummybyte = 1;
-			info->buffersize = 256;
-			if(info->dualport){
-				WriteClk = 80;
-				EraseClk = 20;
-				ReadClk  = 70;
-			}else{
-				WriteClk = 80;
-				EraseClk = 20;
-				ReadClk  = 50;
-			}
-#if 1
-
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 			info->readcmd = 0xbb;
 			info->dummybyte = 1;

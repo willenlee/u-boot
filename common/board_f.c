@@ -246,12 +246,12 @@ static int init_func_i2c(void)
 }
 #endif
 
-#if 1 //defined(CONFIG_HARD_SPI) ASPEED:WilliamLin
+#if defined(CONFIG_HARD_SPI)
 static int init_func_spi(void)
 {
-	//puts("SPI Flash : ");
-	//spi_init();
-	//puts("ready\n");
+	puts("SPI:   ");
+	spi_init();
+	puts("ready\n");
 	return 0;
 }
 #endif
@@ -923,7 +923,7 @@ static init_fnc_t init_sequence_f[] = {
 #if defined(CONFIG_HARD_I2C) || defined(CONFIG_SYS_I2C)
 	init_func_i2c,
 #endif
-#if 1 //defined(CONFIG_HARD_SPI) ASPEED:WilliamLin
+#if defined(CONFIG_HARD_SPI)
 	init_func_spi,
 #endif
 	announce_dram_init,

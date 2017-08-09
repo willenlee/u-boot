@@ -417,17 +417,15 @@ static int initr_flash(void)
 }
 #endif
 
-#if defined(CONFIG_AST_FMC)
+#if defined(CONFIG_PPC) && !defined(CONFIG_DM_SPI)
 static int initr_spi(void)
 {
 	/* PPC does this here */
-#if 1//def CONFIG_SPI
-#if defined(CONFIG_ENV_IS_IN_EEPROM)
+#ifdef CONFIG_SPI
+#if !defined(CONFIG_ENV_IS_IN_EEPROM)
 	spi_init_f();
 #endif
-	puts("FMC : ");
-	spi_init();
-
+	spi_init_r();
 #endif
 	return 0;
 }
@@ -852,7 +850,7 @@ init_fnc_t init_sequence_r[] = {
 	/* initialize higher level parts of CPU like time base and timers */
 	cpu_init_r,
 #endif
-#ifdef CONFIG_AST_FMC
+#ifdef CONFIG_PPC
 	initr_spi,
 #endif
 #ifdef CONFIG_CMD_NAND
