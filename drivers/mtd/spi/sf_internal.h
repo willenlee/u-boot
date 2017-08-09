@@ -157,15 +157,6 @@ struct spi_flash_params {
 	u32 nr_sectors;
 	u8 e_rd_cmd;
 	u16 flags;
-#define SECT_4K			BIT(0)	/* CMD_ERASE_4K works uniformly */
-#define E_FSR			BIT(1)	/* use flag status register for */
-#define SST_WR			BIT(2)	/* use SST byte/word programming */
-#define WR_QPP			BIT(3)	/* use Quad Page Program */
-#define RD_QUAD			BIT(4)	/* use Quad Read */
-#define RD_DUAL			BIT(5)	/* use Dual Read */
-#define RD_QUADIO		BIT(6)	/* use Quad IO Read */
-#define RD_DUALIO		BIT(7)	/* use Dual IO Read */
-#define RD_FULL			(RD_QUAD | RD_DUAL | RD_QUADIO | RD_DUALIO)
 };
 
 extern const struct spi_flash_params spi_flash_params_table[];

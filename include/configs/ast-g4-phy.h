@@ -124,16 +124,4 @@
 #define CONFIG_MAC_INTERFACE_CLOCK_DELAY	0x2255
 #define CONFIG_RANDOM_MACADDR 0
 
-#define CONFIG_FMC_CS                  1
-#ifdef CONFIG_AST_SPI_NOR
-#define CONFIG_SYS_MAX_FLASH_BANKS     (CONFIG_FMC_CS + 1)
-#else
-#define CONFIG_SYS_MAX_FLASH_BANKS     (CONFIG_FMC_CS)
-#endif
-#define CONFIG_ENV_SECT_SIZE           0x20000         //4K sector
-
-#define CONFIG_ENV_SPI_BUS             0
-#define CONFIG_ENV_SPI_CS              0
-#define CONFIG_ENV_SPI_MAX_HZ          50000000 //70MHz
-#define CONFIG_ENV_SPI_MODE            SPI_MODE_3
 #endif	/* __AST_G4_NCSI_CONFIG_H */

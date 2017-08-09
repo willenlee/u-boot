@@ -20,8 +20,6 @@
 #define SPI_CONF_WRITE_EN		(0x1)
 
 /* FMC_CE0_CTRL	for SPI 0x10, 0x14, 0x18, 0x1c, 0x20 */
-#define SPI_IO_MODE_MASK		(3 << 28)
-#define SPI_IO_MODE_MASKD		(7 << 28)
 #define SPI_IO_MODE(x)			(x << 28)
 #define SPI_SINGLE_BIT			0
 #define SPI_DUAL_BIT_D			2
@@ -40,7 +38,7 @@
 #define SPI_LSB_FIRST_CTRL		(1 << 5)
 #define SPI_CPOL_1				(1 << 4)
 #define SPI_DUAL_DATA			(1 << 3)
-#define SPI_CE_HIGH				(1 << 2)
+#define SPI_CE_INACTIVE			(1 << 2)
 #define SPI_CMD_MODE(x)			(x)
 #define SPI_CMD_NOR_R_MODE		0
 #define SPI_CMD_FAST_R_MODE		1
