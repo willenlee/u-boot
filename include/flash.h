@@ -50,6 +50,7 @@ typedef struct {
 #ifdef CONFIG_AST_SPI_NOR
 	ulong 	reg_base;
         ulong   readcmd;
+	uchar	programcmd;
         ulong   dualport;
 	ulong	dummybyte;
 	ulong	tCK_Write;

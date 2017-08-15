@@ -449,7 +449,7 @@ static void flash_write_buffer (flash_info_t *info, uchar *src, ulong addr, int 
         ulCtrlData |= CE_LOW | USERMODE;
         *(ulong *) (info->reg_base + CtrlOffset) = ulCtrlData;
         udelay(200);
-        *(uchar *) (base) = (uchar) (0x02);
+        *(uchar *) (base) = (uchar) (info->programcmd);
         udelay(10);
         if (info->address32)
         {
@@ -781,6 +781,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x800000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -794,6 +795,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x40000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -807,6 +809,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -825,6 +828,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -844,6 +848,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x200000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x3b;
+			info->programcmd = 0x02;
 			info->dualport = 1;
 			info->dummybyte = 1;
 			info->iomode = IOMODEx2;
@@ -858,6 +863,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x800000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x3b;
+			info->programcmd = 0x02;
 			info->dualport = 1;
 			info->dummybyte = 1;
 			info->iomode = IOMODEx2;
@@ -872,6 +878,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x800000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x3b;
+			info->programcmd = 0x02;
 			info->dualport = 1;
 			info->dummybyte = 1;
 			info->iomode = IOMODEx2;
@@ -886,6 +893,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x3b;
+			info->programcmd = 0x02;
 			info->dualport = 1;
 			info->dummybyte = 1;
 			info->iomode = IOMODEx2;
@@ -900,6 +908,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -918,6 +927,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x800000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -931,6 +941,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -944,6 +955,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -962,6 +974,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -974,11 +987,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->address32 = 1;
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 			info->readcmd = 0xbb;
+			info->programcmd = 0x02;
 			info->dummybyte = 1;
 			info->dualport = 1;
 			info->iomode = IOMODEx2_dummy;
 #elif	defined(CONFIG_FLASH_SPIx4_Dummy)
 			info->readcmd = 0xeb;
+			info->programcmd = 0x02;
 			info->dummybyte = 3;
 			info->dualport = 0;
 			info->iomode = IOMODEx4_dummy;
@@ -991,6 +1006,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 		case MX66L51235F:
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 512;
@@ -1003,11 +1019,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->address32 = 1;
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 			info->readcmd = 0xbb;
+			info->programcmd = 0x02;
 			info->dummybyte = 1;
 			info->dualport = 1;
 			info->iomode = IOMODEx2_dummy;
 #elif	defined(CONFIG_FLASH_SPIx4_Dummy)
 			info->readcmd = 0xeb;
+			info->programcmd = 0x02;
 			info->dummybyte = 3;
 			info->dualport = 0;
 			info->iomode = IOMODEx4_dummy;
@@ -1022,6 +1040,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x1000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -1033,11 +1052,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 #if	1
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 			info->readcmd = 0xbb;
+			info->programcmd = 0x02;
 			info->dummybyte = 1;
 			info->dualport = 1;
 			info->iomode = IOMODEx2_dummy;
 #elif	defined(CONFIG_FLASH_SPIx4_Dummy)
 			info->readcmd = 0xeb;
+			info->programcmd = 0x02;
 			info->dummybyte = 3;
 			info->dualport = 0;
 			info->iomode = IOMODEx4_dummy;
@@ -1052,6 +1073,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x200000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
@@ -1065,6 +1087,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x200000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1078,6 +1101,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x800000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1091,6 +1115,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x80000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1104,6 +1129,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x200000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1117,6 +1143,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			info->size = 0x400000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1129,6 +1156,7 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			printf("Unsupported SPI Flash!! 0x%08lx\n", info->flash_id);
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x0b;
+			info->programcmd = 0x02;
 			info->dualport  = 0;
 			info->dummybyte = 1;
 			info->buffersize = 1;
@@ -1207,11 +1235,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 						info->address32 = 1;
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 						info->readcmd = 0xbb;
+						info->programcmd = 0x02;
 						info->dummybyte = 1;
 						info->dualport = 1;
 						info->iomode = IOMODEx2_dummy;
 #elif	defined(CONFIG_FLASH_SPIx4_Dummy)
 						info->readcmd = 0xeb;
+						info->programcmd = 0x02;
 						info->dummybyte = 3;
 						info->dualport = 0;
 						info->iomode = IOMODEx4_dummy;
@@ -1232,11 +1262,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 						info->address32 = 1;
 #if	defined(CONFIG_FLASH_SPIx2_Dummy)
 						info->readcmd = 0xbb;
+						info->programcmd = 0x02;
 						info->dummybyte = 1;
 						info->dualport = 1;
 						info->iomode = IOMODEx2_dummy;
 #elif	defined(CONFIG_FLASH_SPIx4_Dummy)
 						info->readcmd = 0xeb;
+						info->programcmd = 0x02;
 						info->dummybyte = 3;
 						info->dualport = 0;
 						info->iomode = IOMODEx4_dummy;
