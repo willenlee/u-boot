@@ -74,6 +74,7 @@ flash_info_t flash_info[CONFIG_SYS_MAX_FLASH_BANKS];		/* FLASH chips info */
 #define W25Q64BV		0x1740ef
 #define W25Q128BV		0x1840ef
 #define W25Q256FV		0x1940ef
+#define W25M512JV		0x1971ef
 #define MX25L1605D		0x1520C2
 #define MX25L12805D		0x1820C2
 #define MX25L25635E		0x1920C2
@@ -906,6 +907,23 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 		case W25Q256FV:
 			info->sector_count = 512;
 			info->size = 0x2000000;
+			erase_region_size  = 0x10000;
+			info->readcmd = 0x6b;
+			info->programcmd = 0x32;
+			info->dualport = 0;
+			info->dummybyte = 1;
+			info->buffersize = 256;
+			WriteClk = 50;
+			EraseClk = 20;
+			ReadClk  = 50;
+			info->address32 = 1;
+			info->iomode = IOMODEx4;
+			info->quadport = 1;
+			break;
+
+		case W25M512JV:
+			info->sector_count = 1024;
+			info->size = 0x4000000;
 			erase_region_size  = 0x10000;
 			info->readcmd = 0x6b;
 			info->programcmd = 0x32;
