@@ -904,22 +904,20 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 			break;
 
 		case W25Q256FV:
-			info->sector_count = 256;
-			info->size = 0x1000000;
+			info->sector_count = 512;
+			info->size = 0x2000000;
 			erase_region_size  = 0x10000;
-			info->readcmd = 0x0b;
-			info->programcmd = 0x02;
+			info->readcmd = 0x6b;
+			info->programcmd = 0x32;
 			info->dualport = 0;
 			info->dummybyte = 1;
 			info->buffersize = 256;
 			WriteClk = 50;
 			EraseClk = 20;
 			ReadClk  = 50;
-#if	1
-			info->sector_count = 512;
-			info->size = 0x2000000;
 			info->address32 = 1;
-#endif
+			info->iomode = IOMODEx4;
+			info->quadport = 1;
 			break;
 
 		case S25FL064A:
