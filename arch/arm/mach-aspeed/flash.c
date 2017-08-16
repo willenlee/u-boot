@@ -238,7 +238,7 @@ static void enable_write (flash_info_t * info)
 
 }
 
-static void write_status_register (flash_info_t * info, uchar data)
+static void write_status_register (flash_info_t * info, uchar s1, uchar s2)
 {
 	ulong base;
 	ulong ulCtrlData, CtrlOffset = CS0_CTRL;
@@ -269,7 +269,9 @@ static void write_status_register (flash_info_t * info, uchar data)
         udelay(200);
         *(uchar *) (base) = (uchar) (0x01);
         udelay(10);
-        *(uchar *) (base) = (uchar) (data);
+        *(uchar *) (base) = (uchar) (s1);
+        udelay(10);
+        *(uchar *) (base) = (uchar) (s2);
         ulCtrlData &= CMD_MASK;
         ulCtrlData |= CE_HIGH | USERMODE;
         *(ulong *) (info->reg_base + CtrlOffset) = ulCtrlData;
@@ -1319,10 +1321,13 @@ static ulong flash_get_size (ulong base, flash_info_t *info)
 	info->tCK_Read = ast_spi_calculate_divisor(ReadClk*1000000);
 
 	/* unprotect flash */
-	write_status_register(info, 0);
-
-	if (info->quadport)
-		write_status_register(info, 0x40);	/* enable QE */
+	if (info->quadport) {
+		/* Enable QE */
+		/* XXX this works only for Winbond SPI */
+		write_status_register(info, 0x00, 0x02);
+	} else {
+		write_status_register(info, 0x00, 0x00);
+	}
 
 	if (info->address32) {
 #ifndef AST_SOC_G5
