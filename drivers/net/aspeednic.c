@@ -17,7 +17,7 @@
 
 /* From the board config file */
 #define CONFIG_MAC1_PHY_SETTING         0
-#define CONFIG_MAC2_PHY_SETTING         1
+#define CONFIG_MAC2_PHY_SETTING         0
 #define CONFIG_ASPEED_MAC_NUMBER  1
 #define CONFIG_ASPEED_MAC_CONFIG  0 // config MAC2
 #define _PHY_SETTING_CONCAT(mac) CONFIG_MAC##mac##_PHY_SETTING
