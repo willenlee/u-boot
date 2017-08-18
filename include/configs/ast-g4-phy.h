@@ -113,9 +113,9 @@
 *-------------------------------------------------------------------------------
 */
 #define CONFIG_MAC1_PHY_SETTING		0
-#define CONFIG_MAC2_PHY_SETTING		0
+#define CONFIG_MAC2_PHY_SETTING		1
 #define CONFIG_ASPEED_MAC_NUMBER  1
-#define CONFIG_ASPEED_MAC_CONFIG  1 
+#define CONFIG_ASPEED_MAC_CONFIG  0
 #define _PHY_SETTING_CONCAT(mac) CONFIG_MAC##mac##_PHY_SETTING
 #define _GET_MAC_PHY_SETTING(mac) _PHY_SETTING_CONCAT(mac)
 #define CONFIG_ASPEED_MAC_PHY_SETTING \
