@@ -92,8 +92,8 @@
 #define CONFIG_ASPEEDNIC
 #define CONFIG_NET_MULTI
 #define CONFIG_MAC1_PHY_LINK_INTERRUPT
-#define CONFIG_MAC2_ENABLE
-#define CONFIG_MAC2_PHY_LINK_INTERRUPT
+#define CONFIG_MAC2_ENABLE 0
+#define CONFIG_MAC2_PHY_LINK_INTERRUPT 0
 /*
 *-------------------------------------------------------------------------------
 * NOTICE: MAC1 and MAC2 now have their own seperate PHY configuration.
@@ -113,9 +113,9 @@
 *-------------------------------------------------------------------------------
 */
 #define CONFIG_MAC1_PHY_SETTING		0
-#define CONFIG_MAC2_PHY_SETTING		0
+#define CONFIG_MAC2_PHY_SETTING		3
 #define CONFIG_ASPEED_MAC_NUMBER  1
-#define CONFIG_ASPEED_MAC_CONFIG  0
+#define CONFIG_ASPEED_MAC_CONFIG  1
 #define _PHY_SETTING_CONCAT(mac) CONFIG_MAC##mac##_PHY_SETTING
 #define _GET_MAC_PHY_SETTING(mac) _PHY_SETTING_CONCAT(mac)
 #define CONFIG_ASPEED_MAC_PHY_SETTING \
