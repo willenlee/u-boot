@@ -74,7 +74,6 @@
    record_dll2_pass_range,
    record_dll2_pass_range_h,
    are for DRAM calibration */
-#define CONFIG_DRAM_UART_38400
 
 PATTERN_TABLE:
     .word   0xff00ff00

@@ -1,8 +1,8 @@
 /*
- * Copyright 2016 IBM Corporation
+ i* Copyright 2016 IBM Corporation
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
+i * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
@@ -10,7 +10,7 @@
 
 #ifndef __AST_G4_NCSI_CONFIG_H
 #define __AST_G4_NCSI_CONFIG_H
-
+#define CONFIG_BAUDRATE			115200
 #define CONFIG_ARCH_AST2400
 #define CONFIG_SYS_LOAD_ADDR		0x43000000
 #define CONFIG_FLASH_AST2400
@@ -29,7 +29,7 @@
 #define CONFIG_CMDLINE_TAG	 1		/* enable passing of ATAGs	*/
 #define CONFIG_SETUP_MEMORY_TAGS 1
 #define CONFIG_INITRD_TAG	 1
-#define	CONFIG_BOOTARGS 	"console=ttyS4,38400n8 root=/dev/ram rw"
+#define	CONFIG_BOOTARGS 	"console=ttyS4,115200n8 root=/dev/ram rw"
 #define CONFIG_UPDATE           "tftp 40800000 ast2400.scr; so 40800000'"
 
 #define CONFIG_BOOTDELAY	3		/* autoboot after 3 seconds	*/
@@ -113,7 +113,7 @@
 *-------------------------------------------------------------------------------
 */
 #define CONFIG_MAC1_PHY_SETTING		0
-#define CONFIG_MAC2_PHY_SETTING		3
+#define CONFIG_MAC2_PHY_SETTING		0
 #define CONFIG_ASPEED_MAC_NUMBER  1
 #define CONFIG_ASPEED_MAC_CONFIG  1
 #define _PHY_SETTING_CONCAT(mac) CONFIG_MAC##mac##_PHY_SETTING
