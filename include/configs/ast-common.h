@@ -56,7 +56,7 @@
 #define CONFIG_SYS_LOADS_BAUD_CHANGE
 #define CONFIG_SERIAL1				1
 #define CONFIG_CONS_INDEX			1
-#define CONFIG_BAUDRATE				38400
+#define CONFIG_BAUDRATE				115200
 
 /*
  * BOOTP options
