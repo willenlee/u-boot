@@ -469,28 +469,8 @@ static void aspeed_mac1_enable(void)
 	reg = readl(AST_SCU_BASE + SCU_RESET_CONTROL);
 	writel(reg & ~BIT(11), AST_SCU_BASE + SCU_RESET_CONTROL);
 
-	/* Put pins in RMII/NCSI mode
-	 * Strap[6] = 0 and SCUA0[0:3, 12, 14:17]
-	 *
-	 * RMII1CLKI	SCUA0[12] = 0
-	 * RMII1RCLKO	SCUA0[0] = 0
-	 * RMII1TXEN	SCUA0[1] = 0
-	 * RMII1TXD0	SCUA0[2] = 0
-	 * RMII1TXD1	SCUA0[3] = 0
-	 * RMII1RXD0	SCUA0[14] = 0
-	 * RMII1RXD1	SCUA0[15] = 0
-	 * RMII1CRSDV	SCUA0[16] = 0
-	 * RMII1RXER	SCUA0[17] = 0
-	 */
-	reg = readl(AST_SCU_BASE + 0xA0);
-	writel(reg & ~0x3d00f, AST_SCU_BASE + 0xA0);
-
-	reg = readl(AST_SCU_BASE + 0x70);
-	writel(reg & ~BIT(6), AST_SCU_BASE + 0x70);
-
-	/* RMII1 50MHz RCLK output enable */
-	reg = readl(AST_SCU_BASE + 0x48);
-	writel(reg | BIT(29), AST_SCU_BASE + 0x48);
+	reg = readl(SCU_BASE + SCU_MULTIFUNCTION_PIN_CTL3_REG);
+ 	writel(reg | (MAC1_MDC | MAC1_MDIO), SCU_BASE + SCU_MULTIFUNCTION_PIN_CTL3_REG);
 
 #ifdef CONFIG_MAC1_PHY_LINK_INTERRUPT
 	reg = readl(SCU_BASE + SCU_MULTIFUNCTION_PIN_CTL1_REG);
@@ -1566,9 +1546,9 @@ static void set_mac_control_register (struct eth_device* dev)
 				}
 			}
 			if (PHY_Duplex) {
-				MAC_CR_Register |= FULLDUP_bit;
-			} else {
 				MAC_CR_Register &= ~FULLDUP_bit;
+			} else {
+ 				MAC_CR_Register |= FULLDUP_bit;
 			}
 		} else {
 			printf("Unknow Chip_ID %x\n",Chip_ID);
