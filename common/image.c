@@ -467,23 +467,33 @@ phys_size_t getenv_bootm_size(void)
 	char *s = getenv("bootm_size");
 	if (s) {
 		tmp = (phys_size_t)simple_strtoull(s, NULL, 16);
+		printf("willen getenv_bootm_size if s tmp %08lx\n",tmp);
 		return tmp;
 	}
 
 #if defined(CONFIG_ARM) && defined(CONFIG_NR_DRAM_BANKS)
 	start = gd->bd->bi_dram[0].start;
 	size = gd->bd->bi_dram[0].size;
+	
+	printf("willen getenv_bootm_size if start %08lx size %08lx\n",start,size);
 #else
 	start = gd->bd->bi_memstart;
 	size = gd->bd->bi_memsize;
+
+	printf("willen getenv_bootm_size else start %08lx size %08lx\n",start,size);
 #endif
 
 	s = getenv("bootm_low");
 	if (s)
+	{
 		tmp = (phys_size_t)simple_strtoull(s, NULL, 16);
+		printf("willen getenv_bootm_size s if s %s tmp %08lx\n",tmp,*s);
+	}
 	else
+	{
 		tmp = start;
-
+		printf("willen getenv_bootm_size else tme %08lx\n",tmp);
+	}
 	return size - (tmp - start);
 }
 
@@ -493,12 +503,15 @@ phys_size_t getenv_bootm_mapsize(void)
 	char *s = getenv("bootm_mapsize");
 	if (s) {
 		tmp = (phys_size_t)simple_strtoull(s, NULL, 16);
+		printf("willen getenv_bootm_mapsize tmp %08lx\n",tmp);
 		return tmp;
 	}
 
 #if defined(CONFIG_SYS_BOOTMAPSZ)
+	puts("willen getenv_bootm_mapsize CONFIG_SYS_BOOTMAPSZ\n");
 	return CONFIG_SYS_BOOTMAPSZ;
 #else
+	puts("willen getenv_bootm_mapsize getenv_bootm_size\n");
 	return getenv_bootm_size();
 #endif
 }
@@ -1136,10 +1149,12 @@ int boot_ramdisk_high(struct lmb *lmb, ulong rd_data, ulong rd_len,
 		/* a value of "no" or a similar string will act like 0,
 		 * turning the "load high" feature off. This is intentional.
 		 */
+		puts("willen ramdisk_high if\n");
 		initrd_high = simple_strtoul(s, NULL, 16);
 		if (initrd_high == ~0)
 			initrd_copy_to_ram = 0;
 	} else {
+		puts("willen ramdisk_high else\n");
 		initrd_high = getenv_bootm_mapsize() + getenv_bootm_low();
 	}
 
