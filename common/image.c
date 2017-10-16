@@ -1154,17 +1154,22 @@ int boot_ramdisk_high(struct lmb *lmb, ulong rd_data, ulong rd_len,
 
 	if (rd_data) {
 		if (!initrd_copy_to_ram) {	/* zero-copy ramdisk support */
+			printf("willen !initrd_copy_to_ram\n");
 			debug("   in-place initrd\n");
 			*initrd_start = rd_data;
 			*initrd_end = rd_data + rd_len;
 			lmb_reserve(lmb, rd_data, rd_len);
 		} else {
-			if (initrd_high)
+			if (initrd_high) {
+				printf("willen initrd_high %08lx\n",initrd_high);
 				*initrd_start = (ulong)lmb_alloc_base(lmb,
 						rd_len, 0x1000, initrd_high);
-			else
+			}
+			else {
+				printf("willen initrd_high else\n");
 				*initrd_start = (ulong)lmb_alloc(lmb, rd_len,
 								 0x1000);
+			}
 
 			if (*initrd_start == 0) {
 				puts("ramdisk - allocation error\n");
