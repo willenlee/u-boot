@@ -90,7 +90,7 @@ int dram_init(void)
 			break;
 
 		gd->ram_size += gd->bd->bi_dram[i].size;
-
+		printf("willen dram_init gd->bd->bi_dram[%d].size=%08lx\n",i,gd->bd->bi_dram[i].size);
 	}
 
 	for (; i < CONFIG_NR_DRAM_BANKS; i++) {
