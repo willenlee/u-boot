@@ -327,8 +327,10 @@ __weak ulong board_get_usable_ram_top(ulong total_size)
 __weak phys_size_t board_reserve_ram_top(phys_size_t ram_size)
 {
 #ifdef CONFIG_SYS_MEM_TOP_HIDE
+	printf("willen ram_size %08lx- CONFIG_SYS_MEM_TOP_HIDE %08lx\n",ram_size,CONFIG_SYS_MEM_TOP_HIDE);
 	return ram_size - CONFIG_SYS_MEM_TOP_HIDE;
 #else
+	printf("willen ram_size %08lx\n",ram_size);
 	return ram_size;
 #endif
 }
