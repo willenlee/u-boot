@@ -492,7 +492,7 @@ phys_size_t getenv_bootm_size(void)
 	else
 	{
 		tmp = start;
-		printf("willen getenv_bootm_size else tme %08lx\n",tmp);
+		printf("willen getenv_bootm_size else tmp %08lx\n",tmp);
 	}
 	return size - (tmp - start);
 }
