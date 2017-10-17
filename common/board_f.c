@@ -204,10 +204,12 @@ static int show_dram_config(void)
 	int i;
 
 	debug("\nRAM Configuration:\n");
+	printf("willen RAM Configuration\n");
 	for (i = size = 0; i < CONFIG_NR_DRAM_BANKS; i++) {
 		size += gd->bd->bi_dram[i].size;
 		debug("Bank #%d: %llx ", i,
 		      (unsigned long long)(gd->bd->bi_dram[i].start));
+		printf("willen show_dram_config [%d]=%08lx\n",i,gd->bd->bi_dram[i]);
 #ifdef DEBUG
 		print_size(gd->bd->bi_dram[i].size, "\n");
 		puts("willen show_dram_config\n");
@@ -228,6 +230,7 @@ static int show_dram_config(void)
 
 __weak void dram_init_banksize(void)
 {
+	puts("willen __weak void\n");
 #if defined(CONFIG_NR_DRAM_BANKS) && defined(CONFIG_SYS_SDRAM_BASE)
 	gd->bd->bi_dram[0].start = CONFIG_SYS_SDRAM_BASE;
 	gd->bd->bi_dram[0].size = get_effective_memsize();

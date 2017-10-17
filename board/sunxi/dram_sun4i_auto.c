@@ -31,5 +31,6 @@ static struct dram_para dram_para = {
 
 unsigned long sunxi_dram_init(void)
 {
+	puts("sunxi_dram_init\n");
 	return dramc_init(&dram_para);
 }
