@@ -188,6 +188,7 @@ static int init_func_ram(void)
 
 	gd->ram_size = initdram(board_type);
 
+	printf("willen init_func_ram ram_size %08lx\n",gd->ram_size);
 	if (gd->ram_size > 0)
 		return 0;
 
@@ -209,7 +210,7 @@ static int show_dram_config(void)
 		size += gd->bd->bi_dram[i].size;
 		debug("Bank #%d: %llx ", i,
 		      (unsigned long long)(gd->bd->bi_dram[i].start));
-		printf("willen show_dram_config [%d]=%08lx\n",i,gd->bd->bi_dram[i]);
+		printf("willen show_dram_config [%d]=%08lx\n",i,gd->bd->bi_dram[i].size);
 #ifdef DEBUG
 		print_size(gd->bd->bi_dram[i].size, "\n");
 		puts("willen show_dram_config\n");
@@ -234,6 +235,7 @@ __weak void dram_init_banksize(void)
 #if defined(CONFIG_NR_DRAM_BANKS) && defined(CONFIG_SYS_SDRAM_BASE)
 	gd->bd->bi_dram[0].start = CONFIG_SYS_SDRAM_BASE;
 	gd->bd->bi_dram[0].size = get_effective_memsize();
+	printf("willen board_f gd->bd->bi_dram[0].size = %08lx\n",gd->bd->bi_dram[0].size);
 	puts("willen dram_init_banksize\n");
 #endif
 }
@@ -299,7 +301,7 @@ static int setup_ram_buf(void)
 
 	gd->arch.ram_buf = state->ram_buf;
 	gd->ram_size = state->ram_size;
-
+	printf("willen setup_ram_buf ram_size %08lx\n",gd->ram_size);
 	return 0;
 }
 #endif
@@ -340,7 +342,9 @@ static int setup_dest_addr(void)
 	debug("Ram size: %08lX\n", (ulong)gd->ram_size);
 #ifdef CONFIG_SYS_MEM_RESERVE_SECURE
 	/* Reserve memory for secure MMU tables, and/or security monitor */
+	printf("willen setup_dest_addr before ram_size %08lx\n",gd->ram_size);
 	gd->ram_size -= CONFIG_SYS_MEM_RESERVE_SECURE;
+	printf("willen setup_dest_addr after ram_size %08lx\n",gd->ram_size);
 	/*
 	 * Record secure memory location. Need recalcuate if memory splits
 	 * into banks, or the ram base is not zero.
@@ -357,7 +361,10 @@ static int setup_dest_addr(void)
 	 * need to be calculated.
 	 */
 	gd->ram_size = board_reserve_ram_top(gd->ram_size);
+	
+	printf("willen board_reserve_ram_top ram_size %08lx\n",gd->ram_size);
 
+	
 #ifdef CONFIG_SYS_SDRAM_BASE
 	gd->ram_top = CONFIG_SYS_SDRAM_BASE;
 #endif

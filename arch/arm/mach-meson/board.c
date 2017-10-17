@@ -39,7 +39,7 @@ void dram_init_banksize(void)
 	/* Reserve first 16 MiB of RAM for firmware */
 	gd->bd->bi_dram[0].start = CONFIG_SYS_SDRAM_BASE + (16 * 1024 * 1024);
 	gd->bd->bi_dram[0].size = gd->ram_size - (16 * 1024 * 1024);
-	puts("willen dram_init_banksize\n");
+	puts("willen meson dram_init_banksize\n");
 	printf("willen dram_init_banksize size %08lx\n",gd->bd->bi_dram[0].size);
 }
 
