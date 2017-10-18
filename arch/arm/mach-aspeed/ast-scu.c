@@ -461,18 +461,22 @@ void ast_scu_sys_rest_info(void)
 u32 ast_scu_get_vga_memsize(void)
 {
 	u32 size = 0;
-
+	printf("willen ast_scu_get_vga_memsize\n");
 	switch (SCU_HW_STRAP_VGA_SIZE_GET(ast_scu_read(AST_SCU_HW_STRAP1))) {
 	case VGA_8M_DRAM:
+		printf("willen ast 8M\n");
 		size = 8 * 1024 * 1024;
 		break;
 	case VGA_16M_DRAM:
+		printf("willen ast 16M\n");
 		size = 16 * 1024 * 1024;
 		break;
 	case VGA_32M_DRAM:
+		printf("willen ast 32M\n");
 		size = 32 * 1024 * 1024;
 		break;
 	case VGA_64M_DRAM:
+		printf("willen ast 64M\n");
 		size = 64 * 1024 * 1024;
 		break;
 	default:

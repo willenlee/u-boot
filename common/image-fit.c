@@ -700,6 +700,7 @@ static int fit_image_get_address(const void *fit, int noffset, char *name,
 		load64 = (load64 << 32) | uimage_to_cpu(*cell);
 		cell++;
 	}
+	printf("willen fit_image_get_address load64 %08lx\n",load64);
 	*load = (ulong)load64;
 
 	return 0;
@@ -719,6 +720,7 @@ static int fit_image_get_address(const void *fit, int noffset, char *name,
  */
 int fit_image_get_load(const void *fit, int noffset, ulong *load)
 {
+	printf("willen fit_image_get_load\n");
 	return fit_image_get_address(fit, noffset, FIT_LOAD_PROP, load);
 }
 
