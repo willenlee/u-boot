@@ -26,6 +26,7 @@ DECLARE_GLOBAL_DATA_PTR;
  */
 long get_ram_size(long *base, long maxsize)
 {
+	puts("willen get_ram_size\n");
 	volatile long *addr;
 	long           save[32];
 	long           cnt;
@@ -57,6 +58,7 @@ long get_ram_size(long *base, long maxsize)
 			sync();
 			*addr = save[--i];
 		}
+		puts("willen get_ram_size 0\n");
 		return (0);
 	}
 
@@ -76,10 +78,11 @@ long get_ram_size(long *base, long maxsize)
 				addr  = base + cnt;
 				*addr = save[--i];
 			}
+			printf("willen get_ram_size size %08lx\n",size);
 			return (size);
 		}
 	}
-
+	printf("willen get_ram_size maxsize %08lx\n",maxsize);
 	return (maxsize);
 }
 
