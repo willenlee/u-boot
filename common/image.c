@@ -324,6 +324,7 @@ void image_print_contents(const void *ptr)
 	image_print_type(hdr);
 	printf("%sData Size:    ", p);
 	genimg_print_size(image_get_data_size(hdr));
+	printf("willen image_print_contents\n");
 	printf("%sLoad Address: %08x\n", p, image_get_load(hdr));
 	printf("%sEntry Point:  %08x\n", p, image_get_ep(hdr));
 

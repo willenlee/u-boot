@@ -355,6 +355,7 @@ static void fit_image_print_verification_data(const void *fit, int noffset,
  */
 void fit_image_print(const void *fit, int image_noffset, const char *p)
 {
+	printf("willen fit_image_print\n");
 	char *desc;
 	uint8_t type, arch, os, comp;
 	size_t size;
