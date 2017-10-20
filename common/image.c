@@ -379,6 +379,7 @@ static const image_header_t *image_get_ramdisk(ulong rd_addr, uint8_t arch,
 {
 	const image_header_t *rd_hdr = (const image_header_t *)rd_addr;
 
+	printf("willen rd_addr %08lx\n",rd_addr);
 	if (!image_check_magic(rd_hdr)) {
 		puts("Bad Magic Number\n");
 		bootstage_error(BOOTSTAGE_ID_RD_MAGIC);
@@ -741,6 +742,8 @@ ulong genimg_get_kernel_addr_fit(char * const img_addr,
 	/* find out kernel image address */
 	if (!img_addr) {
 		kernel_addr = load_addr;
+		printf("*willen  kernel: default image load address = 0x%08lx\n",
+		      load_addr);
 		debug("*  kernel: default image load address = 0x%08lx\n",
 		      load_addr);
 #if CONFIG_IS_ENABLED(FIT)
@@ -841,6 +844,8 @@ ulong genimg_get_image(ulong img_addr)
 #endif
 
 		/* read in header */
+		printf("willen Reading image header from dataflash address "
+			"%08lx to RAM address %08lx\n", img_addr, ram_addr);
 		debug("   Reading image header from dataflash address "
 			"%08lx to RAM address %08lx\n", img_addr, ram_addr);
 
@@ -1016,6 +1021,7 @@ int boot_get_ramdisk(int argc, char * const argv[], bootm_headers_t *images,
 				return 1;
 		}
 #endif
+		
 
 		/* copy from dataflash if needed */
 		rd_addr = genimg_get_image(rd_addr);
@@ -1111,6 +1117,8 @@ int boot_get_ramdisk(int argc, char * const argv[], bootm_headers_t *images,
 		*rd_start = rd_data;
 		*rd_end = rd_data + rd_len;
 	}
+	printf("willen   ramdisk start = 0x%08lx, ramdisk end = 0x%08lx\n",
+			*rd_start, *rd_end);
 	debug("   ramdisk start = 0x%08lx, ramdisk end = 0x%08lx\n",
 			*rd_start, *rd_end);
 
@@ -1165,6 +1173,8 @@ int boot_ramdisk_high(struct lmb *lmb, ulong rd_data, ulong rd_len,
 	lmb_reserve(lmb, logbuffer_base() - LOGBUFF_OVERHEAD, LOGBUFF_RESERVE);
 #endif
 
+	printf("willen ## initrd_high = 0x%08lx, copy_to_ram = %d\n",
+			initrd_high, initrd_copy_to_ram);
 	debug("## initrd_high = 0x%08lx, copy_to_ram = %d\n",
 			initrd_high, initrd_copy_to_ram);
 
@@ -1214,6 +1224,8 @@ int boot_ramdisk_high(struct lmb *lmb, ulong rd_data, ulong rd_len,
 		*initrd_start = 0;
 		*initrd_end = 0;
 	}
+	printf("willen  ramdisk load start = 0x%08lx, ramdisk load end = 0x%08lx\n",
+			*initrd_start, *initrd_end);
 	debug("   ramdisk load start = 0x%08lx, ramdisk load end = 0x%08lx\n",
 			*initrd_start, *initrd_end);
 
