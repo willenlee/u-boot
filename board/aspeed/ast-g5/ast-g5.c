@@ -26,9 +26,11 @@ int board_init(void)
 
 int dram_init(void)
 {
-	u32 vga = ast_scu_get_vga_memsize();
+	//u32 vga = ast_scu_get_vga_memsize();
 	u32 dram = ast_sdmc_get_mem_size();
-	gd->ram_size = dram - vga;
+	//willen
+	//gd->ram_size = dram - vga;
+	//gd->ram_size = dram;
 
 	return 0;
 }
