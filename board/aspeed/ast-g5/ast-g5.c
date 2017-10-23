@@ -30,7 +30,7 @@ int dram_init(void)
 	u32 dram = ast_sdmc_get_mem_size();
 	//willen
 	//gd->ram_size = dram - vga;
-	//gd->ram_size = dram;
+	gd->ram_size = dram;
 
 	return 0;
 }
